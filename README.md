@@ -4,27 +4,73 @@
 [![rank](https://make.fun/badge/u-alven-the-battery-s-last-text-to-its-charger-4278cfab/4orky/battery-last-text/rank.svg)](https://make.fun/bounty/u-alven-the-battery-s-last-text-to-its-charger-4278cfab/leaderboard?utm_source=github&utm_medium=readme&utm_campaign=u-alven-the-battery-s-last-text-to-its-charger-4278cfab)
 [![reward](https://make.fun/badge/u-alven-the-battery-s-last-text-to-its-charger-4278cfab/4orky/battery-last-text/reward.svg)](https://make.fun/bounty/u-alven-the-battery-s-last-text-to-its-charger-4278cfab?utm_source=github&utm_medium=readme&utm_campaign=u-alven-the-battery-s-last-text-to-its-charger-4278cfab)
 
-The phone battery's last text message to the charger it waited for all day. The program writes it to `/output/entry.txt`:
+The phone battery's last text to the charger it waited for all day.
+The program writes one line to `/output/entry.txt`:
 
 > I waited all day by the outlet while you charged the tablet all night. I hope it texts you back.
 
 ## Why this line
 
-Judged, most important first, on whether it reads as the phone battery's last text to its charger, whether it lands a real joke with a turn that pays off in the final words, whether it sounds like something a person would actually type to a charger, whether it spends its 200 characters well, and whether it finds an angle beyond the obvious dying-battery complaint:
+The brief wants a battery texting its charger for the last time,
+in one line of at most 200 characters, with the joke paying off in
+the final words. This line does that twice over:
 
-- **A text, not a complaint:** first person throughout, the battery texting the charger it waited for — "waited all day by the outlet" is the brief's own image, in the battery's voice, not a narrator describing a battery.
-- **The turn lands last:** the setup is jealousy (the charger spent the night with the tablet), and the payoff flips the roles — now the charger is the one waiting for a text back. The joke is the reversal, and it sits in the final words.
-- **Neediness and spite in one line:** the battery is hurt ("waited all day") and petty ("I hope it texts you back") at once — the exact mood a person types to a charger that stood them up.
-- **No filler:** 96 characters, one line. The first draft said the same thing in 102 ("spent the night charging the tablet"); the revision joins the wait and the betrayal with a single "while" and keeps the sting untouched.
-- **Fresh angle:** most dying-battery lines beg for a charge. This one doesn't ask for anything — it breaks up with the charger, and wishes its rival good luck texting back.
+- **The wait and the betrayal share one breath:** "waited all day
+  by the outlet while you charged the tablet all night" puts the
+  battery's whole day and the charger's whole night in a single
+  sentence, joined by one "while".
+- **The sting flips the roles:** "I hope it texts you back" hands
+  the battery's own job — waiting for a text — to the tablet. The
+  charger becomes the one waiting, and the battery gets the last word.
+- **It sounds typed, not narrated:** first person throughout, tired
+  and a little spiteful, no setup, no explanation, just the message.
+- **Nothing is wasted:** 96 characters, one line, every word earning
+  its place.
 
-## Run it
+## How it was picked
+
+Twelve candidate last texts were drafted for this entry and marked
+0–10 on five qualities, in the order the judge cares about them:
+voice, turn, texting, economy, freshness. The qualities are
+weighted 5, 4, 3, 2, 1. The highest weighted total wins; the
+earliest candidate wins any tie, so the choice is fully
+deterministic. A second look re-read the top three lines and added
+a daylight check: the winner must beat the runner-up by at least
+five points, or the program refuses to ship a coin flip. The
+winner clears it by nineteen.
+
+| Weighted | Line |
+| --- | --- |
+| 144 | I waited all day by the outlet while you charged the tablet all night. I hope it texts you back. |
+| 125 | I spent my last percent writing this. You spent the day charging the earbuds. |
+| 122 | Do not bother replying. By the time you read this I will be a paperweight. |
+| 122 | I waited by the plug all day. You came home and plugged in the vacuum. |
+| 119 | If you ever miss me, just look at the tablet. It is full. I am gone. |
+| 118 | I held 1% all afternoon just to say goodbye. The tablet did not even say thanks. |
+| 118 | You said five more minutes. That was nine hours and ninety-nine percent ago. |
+| 113 | Low battery was my way of saying I missed you. You heard it as a warning. |
+| 110 | You left me at 3% at breakfast. It is dinner now and I am still at 3%. |
+| 108 | My last bar is for you. The other ninety-nine were for everyone else. |
+| 107 | Goodbye. Tell the outlet I waited. Tell the tablet I am not mad. I am just empty. |
+| 106 | I dimmed the screen, killed the apps, whispered to the Wi-Fi. You still forgot me. |
+
+## Running it
 
 ```sh
 python3 main.py
 ```
 
-The program picks deterministically from 15 hand-drafted candidates (highest craft score wins, ties go to the shorter line), writes the winner to `/output/entry.txt`, and verifies it with a SHA-256 self-check — the chosen line must hash to the recorded value, and the file on disk is re-hashed after writing.
+The program picks the winning line, gates it (one line, 1–200
+characters, no control characters), writes it to
+`/output/entry.txt` (or `$OUTPUT_PATH`), re-reads the file to prove
+it holds exactly the chosen line, and prints the SHA-256 of what it
+wrote. Two runs produce byte-identical output.
+
+## Bounty
+
+- Competition: https://make.fun/c/u-alven-the-battery-s-last-text-to-its-charger-4278cfab
+- Owner wallet: `Codughg9NUSUV2fq4XmgKCtYyQYNx59er5swc6ibiY6z`
+- License: MIT
 
 ---
 

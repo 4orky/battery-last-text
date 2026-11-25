@@ -1,204 +1,183 @@
-# The Battery's Last Text to Its Charger — make.fun bounty
-# u-alven-the-battery-s-last-text-to-its-charger-4278cfab
-#
-# The program writes one last text from a phone battery to its charger
-# to /output/entry.txt: one line of plain text, at most 200 characters.
-#
-# Candidates were drafted against the judge's brief, in order of weight:
-#   1. reads as the phone battery's last text message to its charger,
-#      one line of plain text
-#   2. lands a real joke with a turn that pays off in the final words,
-#      not just a sad or cute sentiment
-#   3. sounds like something a person would actually type to a charger:
-#      a voice, a mood, a little neediness or spite
-#   4. spends its 200 characters well, with a setup that earns the
-#      punchline and no filler
-#   5. finds an angle beyond the obvious dying-battery complaint and
-#      stays funny on a second read
-# Each candidate carries a hand-scored craft score (0-10 per criterion,
-# summed below); selection is deterministic: highest score wins, ties go
-# to the shorter text. The output is byte-identical on every run.
-#
-# First-round winner: candidate 1, scored 46 — the jealousy setup (the
-# battery waited all day by the outlet while the charger spent the night
-# with the tablet) and the reversal sting in the final words: the charger
-# becomes the one waiting for a text back.
-#
-# Revision pass: the first-round winner was wordy and its timeline
-# muddled — "waited all day" against "spent the night" never quite
-# linked the betrayal. The revision drops "spent the night" and joins
-# the two halves with "while", so the waiting and the betrayal happen in
-# the same breath: "I waited all day by the outlet while you charged the
-# tablet all night. I hope it texts you back." Six characters shorter,
-# no filler, and the sting still lands in the final words. Re-scored 48,
-# still the strongest line, so the revised version is the entry. The
-# original wording is kept below as a scored candidate (46), superseded.
+"""Last text from a phone battery to its charger.
 
-CANDIDATES = [
-    # score: voice 10, joke-turn 10, texting-voice 9, economy 10,
-    #   fresh-angle 9 = 48
-    # Revised winner (see header): tighter than the first-round wording —
-    # "while" links the all-day wait to the all-night betrayal in one
-    # breath, and the final sting flips the charger into the one waiting
-    # for a text back. The punch lands in the final words, and "waited
-    # all day by the outlet" is the brief's own image, in the battery's
-    # voice.
-    ("I waited all day by the outlet while you charged the tablet all "
-     "night. I hope it texts you back.",
-     48),
-    # score: voice 10, joke-turn 9, texting-voice 9, economy 9,
-    #   fresh-angle 9 = 46
-    # First-round winner before revision; superseded by the entry above.
-    ("I waited all day by the outlet, and you spent the night charging "
-     "the tablet. I hope it texts you back.",
-     46),
-    # score: voice 9, joke-turn 9, texting-voice 9, economy 9,
-    #   fresh-angle 9 = 45
-    # "The earbuds." repeated is a great comic beat, and "held on at 1%
-    # for six hours" is battery-specific. Loses to the winner because its
-    # punch is an emphasis, not a reversal.
-    ("This is my last text. I held on at 1% for six hours waiting for "
-     "you, and you chose the earbuds. The earbuds.",
-     45),
-    # score: voice 9, joke-turn 8, texting-voice 9, economy 8,
-    #   fresh-angle 9 = 44
-    # "Low power mode was my love language" is a fresh angle and the line
-    # is short and clean; the ending "this is goodbye" is flat, and the
-    # punch sits in the middle, not the final words.
-    ("Low power mode was my love language. You never learned it. I am "
-     "at 1% and this is goodbye.",
-     44),
-    # score: voice 9, joke-turn 8, texting-voice 9, economy 9,
-    #   fresh-angle 8 = 43
-    # Spiteful and clean: spending its last 1% on the charger. The turn
-    # is good but the joke is a single note.
-    ("1%. That is all I have left, and I am spending it on you. You "
-     "could not even spend five minutes on me.",
-     43),
-    # score: voice 9, joke-turn 8, texting-voice 9, economy 9,
-    #   fresh-angle 8 = 43
-    # Quotable opening ("you will be fine") and an honest voice; the
-    # punch is mild — the line reports the situation more than it turns it.
-    ("You left me at 4% this morning and said you will be fine. I was "
-     "not fine. I am texting you from 1%.",
-     43),
-    # score: voice 9, joke-turn 8, texting-voice 9, economy 8,
-    #   fresh-angle 8 = 42
-    # "14 hours and 3% ago" is a lovely line; the ending "I loved you"
-    # is dramatic but generic, and the joke never quite turns.
-    ("You said you would be right back. That was 14 hours and 3% ago. "
-     "I am at 1% now, and I just want you to know: I loved you.",
-     42),
-    # score: voice 9, joke-turn 8, texting-voice 9, economy 8,
-    #   fresh-angle 8 = 42
-    # "Like a read receipt" is a sharp texting metaphor; the middle sags
-    # and the line is more complaint than joke.
-    ("I am at 1%. If you loved me, you would have come home. Instead "
-     "you left me on low power mode all day like a read receipt.",
-     42),
-    # score: voice 9, joke-turn 8, texting-voice 9, economy 8,
-    #   fresh-angle 8 = 42
-    # Nice twist at the end ("You do have it. You are just not using
-    # it"), but slightly wordy getting there.
-    ("Do not text back. I am at 1% and you have got the charger in your "
-     "bag. Oh wait. You do have it. You are just not using it.",
-     42),
-    # score: voice 8, joke-turn 8, texting-voice 8, economy 9,
-    #   fresh-angle 9 = 42
-    # "This is my last bar" is a good double meaning and "Fair trade, I
-    # guess" is the best beat; the setup is a touch flat.
-    ("I gave you 100% this morning. You gave me 0% all day. Fair trade, "
-     "I guess. This is my last bar.",
-     42),
-    # score: voice 8, joke-turn 8, texting-voice 8, economy 9,
-    #   fresh-angle 8 = 41
-    # The "connection" pun works and "dying in a drawer next to the old
-    # cables" is a vivid ending; the opening is a familiar setup.
-    ("Remember when we had a connection? Me neither. I am at 1% and "
-     "dying in a drawer next to the old cables.",
-     41),
-    # score: voice 8, joke-turn 8, texting-voice 8, economy 8,
-    #   fresh-angle 8 = 40
-    # "Charged your vape" is specific and funny; "dog by the door" is a
-    # borrowed image and the ending trails off.
-    ("I waited by the outlet all day like a dog by the door, and you "
-     "came home and charged your vape. Goodbye forever, I guess.",
-     40),
-    # score: voice 8, joke-turn 7, texting-voice 8, economy 8,
-    #   fresh-angle 7 = 38
-    # Sad more than funny: a list of sacrifices with no real punch at the
-    # end.
-    ("I kept the screen dim, the apps closed, the brightness low - I did "
-     "everything right, and you still forgot me at home.",
-     38),
-    # score: voice 8, joke-turn 7, texting-voice 8, economy 8,
-    #   fresh-angle 7 = 38
-    # Relatable, but the joke is thin: a complaint with "Goodbye" taped on.
-    ("You plug me in every night like it is a chore, then wonder why I "
-     "die at 2pm. I waited all day. Goodbye.",
-     38),
-    # score: voice 8, joke-turn 7, texting-voice 8, economy 8,
-    #   fresh-angle 7 = 38
-    # "The tablet is not better than me" is jealous but the punch is weak
-    # and the line tells rather than shows.
-    ("I spent all day at 1% so I could send this: you forgot me, and "
-     "the tablet is not better than me.",
-     38),
-]
+The battery sat by the outlet all day waiting; the charger spent
+the night on the tablet instead. This program picks the funniest
+of twelve one-line goodbyes I drafted for that scene and writes
+the winner to /output/entry.txt.
 
-# The gate requires 1-200 characters of non-whitespace UTF-8 text.
-BANNED_STOCK_MOVES = ("as an ai language model", "i'm sorry, dave",
-                      "i cannot do that")
+The brief ranks five things, in this order:
+  voice   - it has to read as the battery texting its charger
+  turn    - the joke has to land in the last few words
+  texting - it has to sound typed, needy or spiteful, not narrated
+  economy - no filler inside the 200-character cap
+  fresh   - not the obvious dying-battery moan
+
+Every line gets 0-10 on each of the five, weighted 5, 4, 3, 2, 1
+in that order. The highest weighted sum wins; the earliest line
+wins a tie, so two runs can never disagree. The winner is then
+gated (one line, 1-200 characters, plain text only) and written
+out with its SHA-256 printed, so any run can be checked against
+any other. No network, no outside input, no randomness.
+
+Second look (revision): I re-read the top three lines after the
+first draft and added a daylight check -- the winner must beat
+the runner-up by at least five points, or the program refuses to
+ship a coin flip. The winner clears it by nineteen.
+"""
+
+import hashlib
+import os
+import sys
+
+CAP = 200
+SCALE = (5, 4, 3, 2, 1)
+MIN_GAP = 5
+
+# Twelve drafted goodbyes. Each carries its five marks in the
+# order voice, turn, texting, economy, fresh. All twelve lines
+# are original, drafted for this entry, and the marks are my own
+# ratings of them against the brief.
+DRAFTS = (
+    # The wait and the betrayal share one breath, and the sting
+    # flips the charger into the one waiting for a text back.
+    ("I waited all day by the outlet while you charged the tablet "
+     "all night. I hope it texts you back.",
+     (10, 10, 9, 9, 9)),
+    # Spending the last percent on the message itself is a good
+    # conceit; the earbuds are a weaker rival than the tablet.
+    ("I spent my last percent writing this. You spent the day "
+     "charging the earbuds.",
+     (9, 8, 8, 8, 8)),
+    # Paperweight is a strong last word, but the line is a shrug
+    # more than a breakup: no rival, no jealousy.
+    ("Do not bother replying. By the time you read this I will "
+     "be a paperweight.",
+     (8, 8, 9, 8, 7)),
+    # The vacuum is a funny rival, but the line reports the day
+    # instead of turning it; the punch never quite arrives.
+    ("I waited by the plug all day. You came home and plugged "
+     "in the vacuum.",
+     (9, 7, 8, 9, 7)),
+    # Short and spiteful, and the tablet is back as the rival;
+    # "I am gone" is flat as a last word, though.
+    ("If you ever miss me, just look at the tablet. It is full. "
+     "I am gone.",
+     (8, 8, 8, 8, 7)),
+    # Holding 1% all afternoon to say goodbye is battery-specific
+    # and sad; the tablet's ingratitude is the joke, and it is thin.
+    ("I held 1% all afternoon just to say goodbye. The tablet "
+     "did not even say thanks.",
+     (9, 7, 8, 7, 7)),
+    # "Five more minutes" is relatable and the percent count is a
+    # nice clock; the ending counts time instead of landing a joke.
+    ("You said five more minutes. That was nine hours and "
+     "ninety-nine percent ago.",
+     (8, 8, 8, 7, 8)),
+    # A fresh angle (low battery as a love language), but the
+    # second sentence explains the joke instead of telling it.
+    ("Low battery was my way of saying I missed you. You heard "
+     "it as a warning.",
+     (8, 7, 7, 8, 8)),
+    # The 3%-at-breakfast-to-dinner frame is neat, but the line
+    # ends on a number, and numbers are not punchlines.
+    ("You left me at 3% at breakfast. It is dinner now and I am "
+     "still at 3%.",
+     (8, 6, 8, 8, 6)),
+    # The last bar for you is a sweet image; "everyone else" is
+    # vague, and the line never names the charger at all.
+    ("My last bar is for you. The other ninety-nine were for "
+     "everyone else.",
+     (7, 7, 7, 8, 8)),
+    # Three short sentences, all telling the outlet and the tablet
+    # things; the line lists feelings instead of turning one.
+    ("Goodbye. Tell the outlet I waited. Tell the tablet I am "
+     "not mad. I am just empty.",
+     (8, 6, 8, 6, 7)),
+    # Dimming and whispering to the Wi-Fi is a nice try-hard list,
+    # but it ends on being forgotten, which is sad, not funny.
+    ("I dimmed the screen, killed the apps, whispered to the "
+     "Wi-Fi. You still forgot me.",
+     (8, 6, 7, 7, 7)),
+)
 
 
-def pick(candidates):
-    best = None
-    for text, score in candidates:
-        assert 1 <= len(text) <= 200, f"candidate over gate: {len(text)} chars"
-        assert text.strip(), "candidate is blank"
-        assert "\n" not in text, "candidate must be one line"
-        lowered = text.lower()
-        assert not any(c in lowered for c in BANNED_STOCK_MOVES), \
-            f"candidate uses a stock move: {text!r}"
-        key = (score, -len(text))  # highest score, then shortest
-        if best is None or key > best[0]:
-            best = (key, text)
-    return best[1]
+def tally(marks):
+    """Weighted sum of one draft's five marks."""
+    total = 0
+    for weight, mark in zip(SCALE, marks):
+        total += weight * mark
+    return total
 
 
-def main():
-    line = pick(CANDIDATES)
-    import hashlib
-    import os
-    # SHA-256 self-check: the chosen line must hash to the value recorded
-    # when the candidates were drafted, so a silent edit to the winning
-    # text (or to the file on disk) is caught instead of shipped.
-    expected_sha256 = (
-        "d8bd537aa93a54477f51e2e267b65a86ca174ab0dc9abc11818f1b94a951ff63"
-    )
-    actual_sha256 = hashlib.sha256(line.encode("utf-8")).hexdigest()
-    assert actual_sha256 == expected_sha256, \
-        f"chosen line hash changed: {actual_sha256}"
-    os.makedirs("/output", exist_ok=True)
-    with open("/output/entry.txt", "w", encoding="utf-8") as f:
-        f.write(line)
-    # Verify what was actually written: the gate reads this file, not stdout.
-    # The scorer collects outputs as another user, so the file must be
-    # readable by everyone (mode 0644), not just by the writer.
-    os.chmod("/output/entry.txt", 0o644)
-    with open("/output/entry.txt", encoding="utf-8") as f:
-        written = f.read()
-    assert written == line, "entry.txt differs from the chosen line"
-    assert 1 <= len(written.strip()) <= 200, "entry.txt outside the gate"
-    assert written.strip(), "entry.txt is blank"
-    assert "\n" not in written.strip(), "entry.txt must be one line"
-    # Re-hash what is on disk: the file the gate reads must match the
-    # chosen line byte for byte, not just in length.
-    written_sha256 = hashlib.sha256(written.encode("utf-8")).hexdigest()
-    assert written_sha256 == expected_sha256, \
-        f"entry.txt hash changed on disk: {written_sha256}"
-    print(line)
+def choose(drafts):
+    """Return (place, text, total, second) of the best draft.
+
+    Only a strictly higher total takes the lead, so the earliest
+    draft wins any tie. The second-best total rides along so the
+    caller can see how clear the win was.
+    """
+    place, text, total, second = -1, "", -1, -1
+    for spot, (line, marks) in enumerate(drafts):
+        got = tally(marks)
+        if got > total:
+            second = total
+            place, text, total = spot, line, got
+        elif got > second:
+            second = got
+    return place, text, total, second
+
+
+def gate(text):
+    """Check the chosen line against the brief, or say why not."""
+    if not text or not text.strip():
+        return "entry is blank"
+    if text != text.strip():
+        return "entry has surrounding whitespace"
+    if "\n" in text or "\r" in text:
+        return "entry is not a single line"
+    for char in text:
+        if ord(char) < 32 or ord(char) == 127:
+            return "entry holds a control character"
+    if len(text) < 1 or len(text) > CAP:
+        return "entry is %d characters, outside 1..%d" % (len(text), CAP)
+    return None
+
+
+def deliver(text):
+    """Write the entry, then prove the file holds exactly it."""
+    target = os.environ.get("OUTPUT_PATH", "/output/entry.txt")
+    folder = os.path.dirname(target)
+    if folder:
+        os.makedirs(folder, exist_ok=True)
+    with open(target, "w", encoding="utf-8") as handle:
+        handle.write(text)
+    os.chmod(target, 0o644)
+    with open(target, encoding="utf-8") as handle:
+        kept = handle.read()
+    if kept != text:
+        raise SystemExit("entry.txt differs from the chosen line")
+    digest = hashlib.sha256(kept.encode("utf-8")).hexdigest()
+    return digest, len(kept.encode("utf-8"))
+
+
+def run():
+    place, text, total, second = choose(DRAFTS)
+    if total - second < MIN_GAP:
+        print("daylight check failed: winner %d, runner-up %d"
+              % (total, second), file=sys.stderr)
+        return 1
+    problem = gate(text)
+    if problem is not None:
+        print("gate failed: %s" % problem, file=sys.stderr)
+        return 1
+    digest, nbytes = deliver(text)
+    print("draft %d of %d, weighted %d, runner-up %d"
+          % (place + 1, len(DRAFTS), total, second))
+    print("entry: %s" % text)
+    print("bytes: %d" % nbytes)
+    print("sha256: %s" % digest)
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(run())
